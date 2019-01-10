@@ -8,15 +8,15 @@ import (
 )
 
 func ExecutePipeline(jobs ...job) {
-	in := make(chan interface{}, 100)
-	out := make(chan interface{}, 100)
+	in := make(chan interface{}, MaxInputDataLen)
+	out := make(chan interface{}, MaxInputDataLen)
 	wg := &sync.WaitGroup{}
 
 	for _, job := range jobs {
 		wg.Add(1)
 		go startWorker(job, in, out, wg)
 		in = out
-		out = make(chan interface{}, 100)
+		out = make(chan interface{}, MaxInputDataLen)
 	}
 	wg.Wait()
 }
